@@ -21,13 +21,13 @@ This repo provides a clean Ubuntu 22.04 guide and ready-to-run scripts for SERL 
    ```
 3. Clone the SERL source repo (kept external).
    ```bash
-   mkdir -p /home/karuppia/serl_ws
-   cd /home/karuppia/serl_ws
+   mkdir -p "$HOME/serl_ws"
+   cd "$HOME/serl_ws"
    git clone https://github.com/rail-berkeley/serl.git
    ```
 4. Create the `serl` conda environment from the provided file.
    ```bash
-   conda env create -n serl -f /home/karuppia/serl_ws/SERL_try/env/serl_env.yml
+   conda env create -n serl -f "$HOME/serl_ws/SERL_try/env/serl_env.yml"
    ```
 5. Activate the environment.
    ```bash
@@ -44,19 +44,19 @@ Open two terminals.
 Terminal 1 (learner):
 ```bash
 conda activate serl
-/home/karuppia/serl_ws/SERL_try/scripts/run_learner.sh
+   "$HOME/serl_ws/SERL_try/scripts/run_learner.sh"
 ```
 
 Terminal 2 (actor):
 ```bash
 conda activate serl
-/home/karuppia/serl_ws/SERL_try/scripts/run_actor.sh
+   "$HOME/serl_ws/SERL_try/scripts/run_actor.sh"
 ```
 
 ## Run Type 2: Manual control (no learner/actor)
 ```bash
 conda activate serl
-/home/karuppia/serl_ws/SERL_try/scripts/run_manual.sh
+ "$HOME/serl_ws/SERL_try/scripts/run_manual.sh"
 ```
 
 ## Manual control keys
@@ -68,5 +68,5 @@ conda activate serl
 - `ESC`: quit
 
 ## Notes
-- All scripts assume the SERL workspace exists at `/home/karuppia/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim`.
+- All scripts assume the SERL workspace exists at `$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim`.
 - If your paths differ, edit the scripts in `scripts/` accordingly.

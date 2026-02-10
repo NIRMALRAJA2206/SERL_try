@@ -6,5 +6,5 @@ set -euo pipefail
 export JAX_PLATFORMS=cpu
 export PYTHONNOUSERSITE=1
 
-cd /home/karuppia/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim
+cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
 python manual_control.py
