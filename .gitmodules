@@ -1,0 +1,3 @@
+[submodule "serl"]
+	path = serl
+	url = https://github.com/rail-berkeley/serl.git

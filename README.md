@@ -19,21 +19,26 @@ This repo provides a clean Ubuntu 22.04 guide and ready-to-run scripts for SERL 
    ```bash
    conda --version
    ```
-3. Clone the SERL source repo (kept external).
+3. Clone this repo with submodules (includes SERL source).
    ```bash
    mkdir -p "$HOME/serl_ws"
    cd "$HOME/serl_ws"
-   git clone https://github.com/rail-berkeley/serl.git
+   git clone --recurse-submodules https://github.com/NIRMALRAJA2206/SERL_try.git
    ```
-4. Create the `serl` conda environment from the provided file.
+4. If you already cloned without submodules, initialize them now.
+   ```bash
+   cd "$HOME/serl_ws/SERL_try"
+   git submodule update --init --recursive
+   ```
+5. Create the `serl` conda environment from the provided file.
    ```bash
    conda env create -n serl -f "$HOME/serl_ws/SERL_try/env/serl_env.yml"
    ```
-5. Activate the environment.
+6. Activate the environment.
    ```bash
    conda activate serl
    ```
-6. Install runtime dependency used by manual control.
+7. Install runtime dependency used by manual control.
    ```bash
    pip install pygame
    ```
@@ -104,4 +109,4 @@ python manual_control.py
 
 ## Notes
 - All scripts assume the SERL workspace exists at `$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim`.
-- If your paths differ, edit the scripts in `scripts/` accordingly.
+- If you want to use the submodule copy instead, change the scripts to point to `$HOME/serl_ws/SERL_try/serl/examples/async_sac_state_sim`.
