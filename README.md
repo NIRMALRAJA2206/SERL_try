@@ -44,19 +44,54 @@ Open two terminals.
 Terminal 1 (learner):
 ```bash
 conda activate serl
-   "$HOME/serl_ws/SERL_try/scripts/run_learner.sh"
+"$HOME/serl_ws/SERL_try/scripts/run_learner.sh"
 ```
 
 Terminal 2 (actor):
 ```bash
 conda activate serl
-   "$HOME/serl_ws/SERL_try/scripts/run_actor.sh"
+"$HOME/serl_ws/SERL_try/scripts/run_actor.sh"
+```
+
+### Same commands (expanded, no scripts)
+Terminal 1 (learner):
+```bash
+export JAX_PLATFORMS=cpu
+export PYTHONNOUSERSITE=1
+export WANDB_MODE=disabled
+cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
+python async_sac_state_sim.py --learner --env PandaPickCube-v0 --debug
+```
+
+Terminal 2 (actor):
+```bash
+conda activate serl
+export JAX_PLATFORMS=cpu
+export PYTHONNOUSERSITE=1
+cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
+python async_sac_state_sim.py --actor --env PandaPickCube-v0 --render --debug
 ```
 
 ## Run Type 2: Manual control (no learner/actor)
 ```bash
 conda activate serl
- "$HOME/serl_ws/SERL_try/scripts/run_manual.sh"
+"$HOME/serl_ws/SERL_try/scripts/run_manual.sh"
+```
+
+### Same commands (expanded, no scripts)
+Install dependency (inside `serl` env):
+```bash
+conda activate serl
+pip install pygame
+```
+
+Run manual control:
+```bash
+conda activate serl
+export JAX_PLATFORMS=cpu
+export PYTHONNOUSERSITE=1
+cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
+python manual_control.py
 ```
 
 ## Manual control keys
