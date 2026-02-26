@@ -16,9 +16,9 @@ sudo apt update
 sudo apt install -y git build-essential curl wget
 ```
 
-## 1. Install Miniconda (recommended on fresh machine)
+## 1. Install Miniconda (only if Conda is not already installed)
 
-If `conda` is already available, skip this section.
+If `conda` is already available on your system, that is enough. You do not need Miniconda.
 
 ```bash
 cd ~
