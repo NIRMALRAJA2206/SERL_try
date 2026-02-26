@@ -1,112 +1,131 @@
 # SERL_try
-SERL: A Software Suite for Sample-Efficient Robotic Reinforcement Learning
 
-This repo provides a clean Ubuntu 22.04 guide and ready-to-run scripts for SERL simulation.
+Practical setup and run guide for SERL simulation.
 
-## What’s included here
-- `env/serl_env.yml`: conda environment file
-- `requirements/serl_launcher_requirements.txt`: upstream SERL launcher dependencies
-- `requirements/franka_sim_requirements.txt`: upstream franka_sim dependencies
-- `scripts/`: runnable helper scripts for setup and execution
+This repository includes:
+- a ready conda environment file (`env/serl_env.yml`)
+- SERL as a git submodule (`serl/`)
+- helper scripts (`scripts/`)
 
-## Step-by-step setup (Ubuntu 22.04)
-1. Install system packages.
-   ```bash
-   sudo apt update
-   sudo apt install -y git build-essential
-   ```
-2. Install Miniconda or Anaconda (one-time), then ensure `conda` works in your shell.
-   ```bash
-   conda --version
-   ```
-3. Clone this repo with submodules (includes SERL source).
-   ```bash
-   mkdir -p "$HOME/serl_ws"
-   cd "$HOME/serl_ws"
-   git clone --recurse-submodules https://github.com/NIRMALRAJA2206/SERL_try.git
-   ```
-4. If you already cloned without submodules, initialize them now.
-   ```bash
-   cd "$HOME/serl_ws/SERL_try"
-   git submodule update --init --recursive
-   ```
-5. Create the `serl` conda environment from the provided file.
-   ```bash
-   conda env create -n serl -f "$HOME/serl_ws/SERL_try/env/serl_env.yml"
-   ```
-6. Activate the environment.
-   ```bash
-   conda activate serl
-   ```
-7. Install runtime dependency used by manual control.
-   ```bash
-   pip install pygame
-   ```
+## 1. Clone the repository (with submodules)
 
-## Run Type 1: Async SAC (learner + actor)
-Open two terminals.
-
-Terminal 1 (learner):
 ```bash
-conda activate serl
-"$HOME/serl_ws/SERL_try/scripts/run_learner.sh"
+git clone --recurse-submodules https://github.com/NIRMALRAJA2206/SERL_try.git
+cd SERL_try
 ```
 
-Terminal 2 (actor):
+If you already cloned without submodules:
+
 ```bash
-conda activate serl
-"$HOME/serl_ws/SERL_try/scripts/run_actor.sh"
+git submodule update --init --recursive
 ```
 
-### Same commands (expanded, no scripts)
-Terminal 1 (learner):
+## 2. Install Conda / Miniconda (if not installed)
+
+Check whether conda exists:
+
 ```bash
-export JAX_PLATFORMS=cpu
-export PYTHONNOUSERSITE=1
-export WANDB_MODE=disabled
-cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
-python async_sac_state_sim.py --learner --env PandaPickCube-v0 --debug
+conda --version
 ```
 
-Terminal 2 (actor):
+If `conda` is not found, install Miniconda, then reopen your terminal:
+- Linux/macOS: https://docs.conda.io/en/latest/miniconda.html
+- Windows: use Miniconda Prompt after installation
+
+## 3. Create and activate the environment
+
+From the repository root:
+
 ```bash
+conda env create -f env/serl_env.yml
 conda activate serl
-export JAX_PLATFORMS=cpu
-export PYTHONNOUSERSITE=1
-cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
-python async_sac_state_sim.py --actor --env PandaPickCube-v0 --render --debug
 ```
 
-## Run Type 2: Manual control (no learner/actor)
+If the environment already exists:
+
 ```bash
 conda activate serl
-"$HOME/serl_ws/SERL_try/scripts/run_manual.sh"
 ```
 
-### Same commands (expanded, no scripts)
-Install dependency (inside `serl` env):
+## 4. Install project dependencies from source
+
+These commands ensure the local SERL code in this repo is used:
+
 ```bash
-conda activate serl
+pip install -e serl/serl_launcher
+pip install -r serl/serl_launcher/requirements.txt
+pip install -e serl/franka_sim
+pip install -r serl/franka_sim/requirements.txt
+```
+
+Optional (only if manual control complains about `pygame`):
+
+```bash
 pip install pygame
 ```
 
-Run manual control:
+## 5. Verify basic setup
+
 ```bash
+python -c "import jax, serl_launcher, franka_sim; print('Setup OK')"
+```
+
+## Run Type 1: Async SAC (Learner + Actor)
+
+Use two terminals.
+
+In both terminals:
+
+```bash
+cd SERL_try
 conda activate serl
-export JAX_PLATFORMS=cpu
-export PYTHONNOUSERSITE=1
-cd "$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim"
+cd serl/examples/async_sac_state_sim
+```
+
+Terminal 1 (Learner):
+
+```bash
+bash run_learner.sh
+```
+
+Terminal 2 (Actor):
+
+```bash
+bash run_actor.sh
+```
+
+Notes:
+- Keep both terminals running at the same time.
+- The actor window opens with rendering enabled.
+
+## Run Type 2: Manual Control (No Learner/Actor)
+
+```bash
+cd SERL_try
+conda activate serl
+cd serl/examples/async_sac_state_sim
 python manual_control.py
 ```
 
-## Manual control keys
-- `W/S`: X+, X-
-- `A/D`: Y-, Y+
-- `R/F`: Z+, Z-
-- `O/P`: gripper open/close
+Manual keys:
+- `W/S`: move X+
+- `A/D`: move Y
+- `R/F`: move Z
+- `O/P`: open/close gripper
 - `N`: reset
-- `ESC`: quit
+- `ESC`: exit
 
-## Notes
-- All scripts assume the SERL workspace exists at `$HOME/serl_ws/serl_sim_ws/src/serl/examples/async_sac_state_sim`.
-- If you want to use the submodule copy instead, change the scripts to point to `$HOME/serl_ws/SERL_try/serl/examples/async_sac_state_sim`.
+## Optional: use helper scripts from this repo
+
+Helper scripts are available in `scripts/`, but the direct commands above are the most reliable and easiest to debug.
+
+## Troubleshooting
+
+- `ModuleNotFoundError: serl_launcher`:
+  Run the install commands in section 4 again.
+- `ModuleNotFoundError: franka_sim`:
+  Run `pip install -e serl/franka_sim`.
+- Submodule folder is empty:
+  Run `git submodule update --init --recursive`.
+- `conda: command not found`:
+  Install Miniconda and reopen the terminal.
