@@ -7,14 +7,29 @@ This repository includes:
 - SERL as a git submodule (`serl/`)
 - helper scripts (`scripts/`)
 
-## 1. Clone the repository (with submodules)
+## 1. Create a workspace and clone the repository (with submodules)
+
+Create a clean workspace folder, enter it, then clone:
 
 ```bash
+mkdir -p ~/serl_ws
+cd ~/serl_ws
 git clone --recurse-submodules https://github.com/NIRMALRAJA2206/SERL_try.git
 cd SERL_try
 ```
 
-If you already cloned without submodules:
+What this does:
+- `mkdir -p ~/serl_ws`: creates a reusable workspace folder
+- `cd ~/serl_ws`: ensures the repo is cloned inside that workspace
+- `--recurse-submodules`: also fetches the `serl/` submodule in one step
+
+Verify submodule checkout:
+
+```bash
+git submodule status
+```
+
+If you already cloned without submodules, run:
 
 ```bash
 git submodule update --init --recursive
