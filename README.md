@@ -1,13 +1,46 @@
 # SERL_try
 
-Practical setup and run guide for SERL simulation.
+Fresh Ubuntu 22.04 setup and run guide for SERL simulation.
 
 This repository includes:
 - a ready conda environment file (`env/serl_env.yml`)
 - SERL as a git submodule (`serl/`)
 - helper scripts (`scripts/`)
 
-## 1. Create a workspace and clone the repository (with submodules)
+## 0. Fresh Ubuntu 22.04 prerequisites
+
+Install required system tools:
+
+```bash
+sudo apt update
+sudo apt install -y git build-essential curl wget
+```
+
+## 1. Install Miniconda (recommended on fresh machine)
+
+If `conda` is already available, skip this section.
+
+```bash
+cd ~
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+After installation, open a new terminal. Then run:
+
+```bash
+conda --version
+```
+
+If `conda: command not found`, initialize shell manually:
+
+```bash
+source ~/miniconda3/etc/profile.d/conda.sh
+echo 'source ~/miniconda3/etc/profile.d/conda.sh' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## 2. Create a workspace and clone the repository (with submodules)
 
 Create a clean workspace folder, enter it, then clone:
 
@@ -35,18 +68,6 @@ If you already cloned without submodules, run:
 git submodule update --init --recursive
 ```
 
-## 2. Install Conda / Miniconda (if not installed)
-
-Check whether conda exists:
-
-```bash
-conda --version
-```
-
-If `conda` is not found, install Miniconda, then reopen your terminal:
-- Linux/macOS: https://docs.conda.io/en/latest/miniconda.html
-- Windows: use Miniconda Prompt after installation
-
 ## 3. Create and activate the environment
 
 From the repository root:
@@ -67,10 +88,12 @@ conda activate serl
 These commands ensure the local SERL code in this repo is used:
 
 ```bash
-pip install -e serl/serl_launcher
-pip install -r serl/serl_launcher/requirements.txt
-pip install -e serl/franka_sim
-pip install -r serl/franka_sim/requirements.txt
+cd serl
+pip install -e ./serl_launcher
+pip install -r ./serl_launcher/requirements.txt
+pip install -e ./franka_sim
+pip install -r ./franka_sim/requirements.txt
+cd ..
 ```
 
 Optional (only if manual control complains about `pygame`):
@@ -136,11 +159,27 @@ Helper scripts are available in `scripts/`, but the direct commands above are th
 
 ## Troubleshooting
 
-- `ModuleNotFoundError: serl_launcher`:
-  Run the install commands in section 4 again.
-- `ModuleNotFoundError: franka_sim`:
-  Run `pip install -e serl/franka_sim`.
-- Submodule folder is empty:
-  Run `git submodule update --init --recursive`.
 - `conda: command not found`:
-  Install Miniconda and reopen the terminal.
+  ```bash
+  source ~/miniconda3/etc/profile.d/conda.sh
+  conda --version
+  ```
+- `./serl/serl_launcher is not a valid editable requirement`:
+  You are either in the wrong directory or submodule is missing.
+  ```bash
+  cd ~/serl_ws/SERL_try
+  git submodule update --init --recursive
+  ls -la serl
+  cd serl
+  pip install -e ./serl_launcher
+  ```
+- `ModuleNotFoundError: serl_launcher`:
+  ```bash
+  cd ~/serl_ws/SERL_try/serl
+  pip install -e ./serl_launcher
+  ```
+- `ModuleNotFoundError: franka_sim`:
+  ```bash
+  cd ~/serl_ws/SERL_try/serl
+  pip install -e ./franka_sim
+  ```
